@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -6,7 +7,9 @@ public class UnitMovement : MonoBehaviour
 {
     private Camera camera;
     private NavMeshAgent agent;
-    [SerializeField] private LayerMask ground;
+    private LayerMask ground = 1 << 3;
+
+    public bool moveable = false;
 
     private void Awake()
     {
@@ -16,7 +19,8 @@ public class UnitMovement : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(1))
+        if(!moveable) return;
+        if(InputManager.Instance && InputManager.Instance.RightClickDown)
         {
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
             if(Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ground))
