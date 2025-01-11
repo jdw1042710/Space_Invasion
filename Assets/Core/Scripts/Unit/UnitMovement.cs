@@ -20,7 +20,9 @@ public class UnitMovement : MonoBehaviour
     private void Update()
     {
         if(!moveable) return;
-        if(InputManager.Instance && InputManager.Instance.RightClickDown)
+        if(InputManager.Instance 
+        && InputManager.Instance.RightClickDown
+        && !InputManager.Instance.LeftClickHoding)
         {
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
             if(Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ground))

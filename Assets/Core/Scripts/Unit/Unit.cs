@@ -5,6 +5,8 @@ public class Unit : MonoBehaviour
 {
 
     private UnitMovement unitMovement;
+
+    [SerializeField] private GameObject indicator;
     private void Start()
     {
         if(UnitManager.Instance)
@@ -13,6 +15,8 @@ public class Unit : MonoBehaviour
         }
 
         unitMovement = GetComponent<UnitMovement>();
+        SetMoveable(false);
+        SetIndicator(false);
     }
 
     private void OnDestory()
@@ -25,6 +29,13 @@ public class Unit : MonoBehaviour
 
     public void SetMoveable(bool moveable)
     {
-        unitMovement.moveable = moveable;
+        if(unitMovement)
+            unitMovement.moveable = moveable;
+    }
+
+    public void SetIndicator(bool flag)
+    {
+        if(indicator)
+            indicator.SetActive(flag);
     }
 }
