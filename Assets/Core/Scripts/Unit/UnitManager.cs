@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -17,6 +18,8 @@ public class UnitManager : MonoBehaviour
 
     private LayerMask ground = 1 << 3;
     private LayerMask clickable = 1 << 6;
+
+    private bool isCursorHoveredOnEnemy = false;
 
     private void Awake()
     {
@@ -121,26 +124,48 @@ public class UnitManager : MonoBehaviour
         InputManager inputManager = InputManager.Instance;
         if(!inputManager) return;
         Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit = new RaycastHit();
+        // Selection By Clicking
         if(inputManager.LeftClickDown)
         {
-            if(Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, clickable))
+            if(Physics.Raycast(ray, out hit, Mathf.Infinity, clickable) && hit.collider.CompareTag("Ally"))
             {
                 Unit unit = hit.collider.gameObject.GetComponent<Unit>();
                 SelectUnit(unit, InputManager.Instance.LShiftHolding);
             }
         }
+        // Selection Box
         if(inputManager.LeftClickHoding)
         {
             if(selectionBox.IsBoxVisualized())
                 SelectUnitByRect(selectionBox.GetBox());
         }
+
+        // UnSelection
         if(inputManager.LeftClickUp)
         {
-            if(!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, clickable)
+            if(!Physics.Raycast(ray, out hit, Mathf.Infinity, clickable)
             && !selectionBox.IsBoxVisualized()
             && !InputManager.Instance.LShiftHolding)
             {
                 UnSelectAll();
+            }
+        }
+
+        // Attacking
+        isCursorHoveredOnEnemy = selectedUnits.Count > 0 && Physics.Raycast(ray, out hit, Mathf.Infinity, clickable);
+        if(isCursorHoveredOnEnemy)
+        {
+            if(inputManager.RightClickDown)
+            {
+                Transform target = hit.transform;
+                foreach(var unit in selectedUnits)
+                {
+                    if(unit.TryGetComponent<AttackController>(out var controller))
+                    {
+                        controller.targetToAttack = target;
+                    }
+                }
             }
         }
     }

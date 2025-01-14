@@ -5,6 +5,7 @@ public class Unit : MonoBehaviour
 {
 
     private UnitMovement unitMovement;
+    private AttackController attackController;
 
     [SerializeField] private GameObject indicator;
     private void Start()
@@ -15,6 +16,7 @@ public class Unit : MonoBehaviour
         }
 
         unitMovement = GetComponent<UnitMovement>();
+        attackController = GetComponent<AttackController>();
         SetMoveable(false);
         SetIndicator(false);
     }
@@ -37,5 +39,10 @@ public class Unit : MonoBehaviour
     {
         if(indicator)
             indicator.SetActive(flag);
+    }
+
+    public void SetTargetToAttack(Transform target)
+    {
+        attackController.targetToAttack = target;
     }
 }

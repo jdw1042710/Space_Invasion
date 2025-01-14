@@ -5,14 +5,17 @@ using UnityEngine.AI;
 
 public class UnitMovement : MonoBehaviour
 {
+    private Unit unit;
     private Camera camera;
     private NavMeshAgent agent;
     private LayerMask ground = 1 << 3;
 
     public bool moveable = false;
+    public bool isCommandedToMove = false;
 
     private void Awake()
     {
+        unit = GetComponent<Unit>();
         camera = Camera.main;
         agent = GetComponentInChildren<NavMeshAgent>();
     }
@@ -20,15 +23,21 @@ public class UnitMovement : MonoBehaviour
     private void Update()
     {
         if(!moveable) return;
-        if(InputManager.Instance 
-        && InputManager.Instance.RightClickDown
-        && !InputManager.Instance.LeftClickHoding)
+        InputManager inputManager = InputManager.Instance;
+        Debug.Assert(inputManager);
+        // move command
+        if(inputManager.RightClickDown && !inputManager.LeftClickHoding)
         {
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
             if(Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ground))
             {
                 agent.SetDestination(hit.point);
+                isCommandedToMove = false;
+                unit.SetTargetToAttack(null);
             }
         }
+
+        //check agent reached to dest
+        isCommandedToMove = agent.hasPath && (agent.remainingDistance > agent.stoppingDistance);
     }
 }
