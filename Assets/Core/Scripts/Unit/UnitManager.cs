@@ -1,9 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 public class UnitManager : MonoBehaviour
 {
@@ -152,19 +148,29 @@ public class UnitManager : MonoBehaviour
             }
         }
 
-        // Attacking
+        // Moving && Attacking
         isCursorHoveredOnEnemy = selectedUnits.Count > 0 && Physics.Raycast(ray, out hit, Mathf.Infinity, clickable);
-        if(isCursorHoveredOnEnemy)
+        if(inputManager.RightClickDown &&!inputManager.LeftClickHoding)
         {
-            if(inputManager.RightClickDown)
+            if(isCursorHoveredOnEnemy)
             {
                 Transform target = hit.transform;
                 foreach(var unit in selectedUnits)
                 {
+                    //StopToMove
+                    if(unit.TryGetComponent<UnitMovement>(out var unitMovement))
+                        unitMovement.StopToMove();
+                    
                     if(unit.TryGetComponent<AttackController>(out var controller))
-                    {
-                        controller.targetToAttack = target;
-                    }
+                        controller.TargetToAttack = target;
+                }
+            }
+            else if(Physics.Raycast(ray, out hit, Mathf.Infinity, ground))
+            {
+                foreach(var unit in selectedUnits)
+                {
+                    if(unit.TryGetComponent<UnitMovement>(out UnitMovement unitMovement))
+                        unitMovement.MoveTo(hit.point);
                 }
             }
         }

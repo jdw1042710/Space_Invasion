@@ -43,6 +43,6 @@ public class Unit : MonoBehaviour
 
     public void SetTargetToAttack(Transform target)
     {
-        attackController.targetToAttack = target;
+        attackController.TargetToAttack = target;
     }
 }

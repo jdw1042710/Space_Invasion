@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class UnitMovement : MonoBehaviour
     public bool moveable = false;
     public bool isCommandedToMove = false;
 
+
     private void Awake()
     {
         unit = GetComponent<Unit>();
@@ -25,19 +27,19 @@ public class UnitMovement : MonoBehaviour
         if(!moveable) return;
         InputManager inputManager = InputManager.Instance;
         Debug.Assert(inputManager);
-        // move command
-        if(inputManager.RightClickDown && !inputManager.LeftClickHoding)
-        {
-            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ground))
-            {
-                agent.SetDestination(hit.point);
-                isCommandedToMove = false;
-                unit.SetTargetToAttack(null);
-            }
-        }
-
         //check agent reached to dest
-        isCommandedToMove = agent.hasPath && (agent.remainingDistance > agent.stoppingDistance);
+        bool hasPath = agent.hasPath;
+        bool remainPath = agent.remainingDistance > agent.stoppingDistance;
+        isCommandedToMove = hasPath && remainPath;
+    }
+
+    public void MoveTo(Vector3 position)
+    {
+        agent.SetDestination(position);
+    }
+
+    public void StopToMove()
+    {
+        agent.ResetPath();
     }
 }
