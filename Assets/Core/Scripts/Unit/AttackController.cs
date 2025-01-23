@@ -39,7 +39,7 @@ public class AttackController : MonoBehaviour
 
     public void FollowTarget()
     {
-        if(!unitMovement.isCommandedToMove && TargetToAttack)
+        if(!unitMovement.IsCommandedToMove && TargetToAttack)
         {
             // Move toward to enemy
             Vector3 positionToAttack = TargetToAttack.GetComponent<Collider>().ClosestPoint(transform.position);
@@ -56,7 +56,7 @@ public class AttackController : MonoBehaviour
 
     public void AttackTarget()
     {
-        if (!unitMovement.isCommandedToMove && IsTargetInAttackRange())
+        if (!unitMovement.IsCommandedToMove && IsTargetInAttackRange())
         {
             // Attack Process
         }

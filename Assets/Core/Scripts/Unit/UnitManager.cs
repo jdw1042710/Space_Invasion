@@ -154,23 +154,24 @@ public class UnitManager : MonoBehaviour
         {
             if(isCursorHoveredOnEnemy)
             {
+                //Attack
                 Transform target = hit.transform;
                 foreach(var unit in selectedUnits)
                 {
                     //StopToMove
                     if(unit.TryGetComponent<UnitMovement>(out var unitMovement))
                         unitMovement.StopToMove();
-                    
                     if(unit.TryGetComponent<AttackController>(out var controller))
                         controller.TargetToAttack = target;
                 }
             }
             else if(Physics.Raycast(ray, out hit, Mathf.Infinity, ground))
             {
+                // Moving
                 foreach(var unit in selectedUnits)
                 {
                     if(unit.TryGetComponent<UnitMovement>(out UnitMovement unitMovement))
-                        unitMovement.MoveTo(hit.point);
+                        unitMovement.MoveTo(hit.point, true);
                 }
             }
         }

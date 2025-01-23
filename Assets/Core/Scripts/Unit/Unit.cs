@@ -32,7 +32,7 @@ public class Unit : MonoBehaviour
     public void SetMoveable(bool moveable)
     {
         if(unitMovement)
-            unitMovement.moveable = moveable;
+            unitMovement.Moveable = moveable;
     }
 
     public void SetIndicator(bool flag)
