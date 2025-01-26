@@ -46,7 +46,6 @@ public class UnitMovement : MonoBehaviour
         agent.SetDestination(position);
         if(isForce)
         {
-            Debug.Log("Foce Move");
             IsCommandedToMove = true;
             commandedPosition = position;
             if(attackController)

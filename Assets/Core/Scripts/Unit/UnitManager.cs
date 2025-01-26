@@ -149,9 +149,12 @@ public class UnitManager : MonoBehaviour
         }
 
         // Moving && Attacking
-        isCursorHoveredOnEnemy = selectedUnits.Count > 0 && Physics.Raycast(ray, out hit, Mathf.Infinity, clickable);
+        
         if(inputManager.RightClickDown &&!inputManager.LeftClickHoding)
         {
+            isCursorHoveredOnEnemy = selectedUnits.Count > 0 
+                                    && Physics.Raycast(ray, out hit, Mathf.Infinity, clickable)
+                                    && hit.collider.CompareTag("Enemy");
             if(isCursorHoveredOnEnemy)
             {
                 //Attack

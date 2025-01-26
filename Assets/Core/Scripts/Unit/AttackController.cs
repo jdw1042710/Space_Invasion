@@ -7,6 +7,7 @@ public class AttackController : MonoBehaviour
     private UnitMovement unitMovement;
 
     [SerializeField] private float attackRange = 5f;
+    [SerializeField] private float attackDamage = 1f;
 
     private void Awake()
     {
@@ -56,9 +57,13 @@ public class AttackController : MonoBehaviour
 
     public void AttackTarget()
     {
-        if (!unitMovement.IsCommandedToMove && IsTargetInAttackRange())
+        if (IsTargetInAttackRange())
         {
             // Attack Process
+            if(TargetToAttack.TryGetComponent(out Unit target))
+            {
+                target.GetDamaged(attackDamage);
+            }
         }
     }
 }

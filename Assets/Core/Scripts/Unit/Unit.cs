@@ -8,6 +8,9 @@ public class Unit : MonoBehaviour
     private AttackController attackController;
 
     [SerializeField] private GameObject indicator;
+
+    public float health;
+
     private void Start()
     {
         if(UnitManager.Instance)
@@ -19,6 +22,7 @@ public class Unit : MonoBehaviour
         attackController = GetComponent<AttackController>();
         SetMoveable(false);
         SetIndicator(false);
+        health = 10;
     }
 
     private void OnDestory()
@@ -44,5 +48,10 @@ public class Unit : MonoBehaviour
     public void SetTargetToAttack(Transform target)
     {
         attackController.TargetToAttack = target;
+    }
+
+    public void GetDamaged(float damage)
+    {
+        health -= damage;
     }
 }
