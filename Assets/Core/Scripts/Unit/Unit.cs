@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -9,20 +10,49 @@ public class Unit : MonoBehaviour
 
     [SerializeField] private GameObject indicator;
 
-    public float health;
+    public float MaxHealth
+    {
+        get
+        {
+            return maxHealth;
+        }
+    }
 
+    [SerializeField]
+    private float maxHealth = 10;
+    public float Health
+    {
+        get
+        {
+            return health;
+        }
+        set
+        {
+            health = Mathf.Max(value, 0);
+            foreach(var listeners in healthListeners)
+            {
+                listeners(health);
+            }
+        }
+    }
+    private float health;
+    public delegate void healthListenerDelegate(float value);
+    private List<healthListenerDelegate> healthListeners = new List<healthListenerDelegate>();
+
+    private void Awake()
+    {
+        unitMovement = GetComponent<UnitMovement>();
+        attackController = GetComponent<AttackController>();
+        SetMoveable(false);
+        SetIndicator(false);
+        Health = maxHealth;
+    }
     private void Start()
     {
         if(UnitManager.Instance)
         {
             UnitManager.Instance.AddUnit(this);
         }
-
-        unitMovement = GetComponent<UnitMovement>();
-        attackController = GetComponent<AttackController>();
-        SetMoveable(false);
-        SetIndicator(false);
-        health = 10;
     }
 
     private void OnDestory()
@@ -52,6 +82,11 @@ public class Unit : MonoBehaviour
 
     public void GetDamaged(float damage)
     {
-        health -= damage;
+        Health -= damage;
+    }
+
+    public void AddHealthListener(healthListenerDelegate callback)
+    {
+        healthListeners.Add(callback);
     }
 }
