@@ -17,7 +17,8 @@ public class AttackController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.CompareTag("Enemy") && TargetToAttack == null)
+        if(!other.CompareTag("Ally") && !other.CompareTag("Enemy")) return;
+        if(!transform.CompareTag(other.tag) && TargetToAttack == null)
         {
             TargetToAttack = other.transform;
         }
@@ -25,7 +26,8 @@ public class AttackController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.CompareTag("Enemy") && TargetToAttack == other.transform)
+        if(!other.CompareTag("Ally") && !other.CompareTag("Enemy")) return;
+        if(!transform.CompareTag(other.tag) && TargetToAttack == other.transform)
         {
             TargetToAttack = null;
         }

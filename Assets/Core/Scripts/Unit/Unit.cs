@@ -33,6 +33,11 @@ public class Unit : MonoBehaviour
             {
                 listeners(health);
             }
+
+            if(health <= 0)
+            {
+                DestroyUnit();
+            }
         }
     }
     private float health;
@@ -83,6 +88,12 @@ public class Unit : MonoBehaviour
     public void GetDamaged(float damage)
     {
         Health -= damage;
+    }
+
+    private void DestroyUnit()
+    {
+        
+        Destroy(gameObject);
     }
 
     public void AddHealthListener(healthListenerDelegate callback)
