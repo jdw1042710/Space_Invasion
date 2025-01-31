@@ -20,8 +20,9 @@ public class UnitAttackState : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        AnimatorStateInfo animationLayerStateInfo = animator.GetCurrentAnimatorStateInfo(1);
         if(unitMovement.IsCommandedToMove
-        || (!attackController.IsTargetInAttackRange() && stateInfo.normalizedTime >= 1.0f))
+        || (!attackController.IsTargetInAttackRange() && animationLayerStateInfo.normalizedTime >= 1.0f))
         {
             animator.SetBool(isAttackID, false);
         }

@@ -20,12 +20,9 @@ public class UnitIdleState : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(unitMovement.GetVelocity().sqrMagnitude > 0)
+        if(!unitMovement.IsCommandedToMove && attackController.TargetToAttack)
         {
-            animator.SetBool(isWalkID, true);
-        }
-        if(attackController.TargetToAttack)
-        {
+            //Transition to Chase State
             animator.SetBool(isFollowID, true);
         }
     }
