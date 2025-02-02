@@ -6,8 +6,11 @@ public class AttackController : MonoBehaviour
 
     private UnitMovement unitMovement;
 
-    [SerializeField] private float attackRange = 5f;
     [SerializeField] private float attackDamage = 1f;
+    [SerializeField] private float meleeAttackRange = 1f;
+    [SerializeField] private float rangeAttackRange = 5f;
+    [SerializeField] private Transform projectileInstantiateTransform;
+    private Projectile projectile;
 
     private void Awake()
     {
@@ -37,7 +40,14 @@ public class AttackController : MonoBehaviour
     {
         if (!TargetToAttack) return false;
         float distanceFromTarget = Vector3.Distance(TargetToAttack.position, transform.position);
-        return distanceFromTarget < attackRange;
+        return distanceFromTarget < rangeAttackRange;
+    }
+
+    public bool IsTargetInMeleeAttackRange()
+    {
+        if (!TargetToAttack) return false;
+        float distanceFromTarget = Vector3.Distance(TargetToAttack.position, transform.position);
+        return distanceFromTarget < meleeAttackRange;
     }
 
     public void FollowTarget()
@@ -57,9 +67,9 @@ public class AttackController : MonoBehaviour
         }
     }
 
-    public void AttackTarget()
+    public void MeleeAttack()
     {
-        if (IsTargetInAttackRange())
+        if (IsTargetInMeleeAttackRange())
         {
             // Attack Process
             if(TargetToAttack.TryGetComponent(out Unit target))
@@ -67,5 +77,35 @@ public class AttackController : MonoBehaviour
                 target.GetDamaged(attackDamage);
             }
         }
+    }
+    public void RangeAttack()
+    {
+        if (IsTargetInAttackRange())
+        {
+            // Attack Process
+            FireProjectile();
+        }
+    }
+
+    private void FireProjectile()
+    {
+        // Instantiate Projectile
+        if(!projectile)
+        {
+            GameObject projectileObj = AssetManager.Instance.GetObject("VFX/Projectile_01.prefab");
+            projectile = Instantiate(projectileObj, transform).GetComponent<Projectile>();
+        }
+        if(TargetToAttack.TryGetComponent(out Unit target))
+        {
+            projectile.Fire(projectileInstantiateTransform, target);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, meleeAttackRange);
+        Gizmos.DrawWireSphere(transform.position, rangeAttackRange);
+
     }
 }

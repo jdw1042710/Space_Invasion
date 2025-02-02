@@ -1050,7 +1050,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 18
+  m_Radius: 20
   m_Center: {x: 0.05063248, y: 2.466964, z: -0.09337234}
 --- !u!195 &4530246350708823682
 NavMeshAgent:
@@ -1136,8 +1136,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetToAttack: {fileID: 0}
-  attackRange: 2
   attackDamage: 1
+  meleeAttackRange: 2
+  rangeAttackRange: 5
+  projectileInstantiateTransform: {fileID: 6744176045238485334}
 --- !u!114 &2975356320882383948
 MonoBehaviour:
   m_ObjectHideFlags: 0
