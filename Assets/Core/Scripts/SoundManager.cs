@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
@@ -14,6 +15,9 @@ public class SoundManager : MonoBehaviour
     private List<SoundObject> availableSoundPool = new List<SoundObject>();
     private List<SoundObject> playingSoundPool = new List<SoundObject>();
     [SerializeField] private int maxPoolSize;
+
+    public static float bgmVolume = 1f;
+    public static float sfxVolume = 0.2f;
 
     private void Awake()
     {

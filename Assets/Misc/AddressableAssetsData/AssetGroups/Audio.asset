@@ -10,18 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: VFX
+  m_Name: Audio
   m_EditorClassIdentifier: 
-  m_GroupName: VFX
-  m_GUID: 0f8ba6098ba5b4652b79fa924fa8a5ca
+  m_GroupName: Audio
+  m_GUID: b43271563f2ee4b6683c4b0e87a69d08
   m_SerializeEntries:
-  - m_GUID: 5f3c3f54ee1434cddb9e5b84d990f20a
-    m_Address: VFX/Projectile_02.prefab
+  - m_GUID: 5ff823f546b52574a931e1d9b44290a6
+    m_Address: SFX/Projectile_Hit.wav
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: be56a98b22cd6448fa1878027cc5ffe9
-    m_Address: VFX/Projectile_01.prefab
+  - m_GUID: 74198389e177d0948b63ca9a3fb22801
+    m_Address: SFX/Melee_Hit.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: af66162561d2eed40ad49268cab318bb
+    m_Address: SFX/Projectile_Fire.wav
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -29,5 +34,5 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: 421b304d6d93845f4ab2407331282164, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: f33e07a3edd604e599a9b17e31a11133, type: 2}
-    - {fileID: 11400000, guid: 3da83694bec7247cb870b67ee782b103, type: 2}
+    - {fileID: 11400000, guid: 3fb8ff3a25cad4aaf8f2b73217638148, type: 2}
+    - {fileID: 11400000, guid: 2629d6f8ed9844c1eaa80322421570d5, type: 2}

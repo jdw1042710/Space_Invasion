@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -14,11 +13,20 @@ public class Projectile : MonoBehaviour
     private float threshold = 0.01f;
     [SerializeField] private float damage = 1f;
     [SerializeField] private float speed = 10f;
+    private readonly static string explosionSoundAssetAddress = "SFX/Projectile_Hit.wav";
+    private AudioClip explosionSound;
     private void Awake()
     {
         projectileVFX.SetActive(false);
         explosionVFX.SetActive(false);
     }
+
+    private void Start()
+    {
+        explosionSound = AssetManager.Instance.GetAudio(explosionSoundAssetAddress);
+        Debug.Assert(explosionSound);
+    }
+
     public void Fire(Transform from, Unit to)
     {
         if(!to) return;
@@ -55,5 +63,6 @@ public class Projectile : MonoBehaviour
         explosionVFX.SetActive(true);
         projectileVFX.SetActive(false);
         target.GetDamaged(damage);
+        SoundManager.Instance.Play(explosionSound, SoundManager.sfxVolume);
     }
 }

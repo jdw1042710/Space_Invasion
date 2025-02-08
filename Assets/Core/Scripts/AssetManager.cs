@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Data;
+using System.Runtime.InteropServices;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -9,13 +10,21 @@ public class AssetManager : MonoBehaviour
 {
     public static AssetManager Instance;
 
-    private string[] assetAdressList = 
+    private string[] prefabAssetAddressList = 
     {
         "VFX/Projectile_01.prefab",
         "VFX/Projectile_02.prefab",
     };
+
+    private string[] audioAssetAddressList = 
+    {
+        "SFX/Projectile_Hit.wav",
+        "SFX/Melee_Hit.wav",
+        "SFX/Projectile_Fire.wav",
+    };
     
-    private Dictionary<string, GameObject> objectPool = new Dictionary<string, GameObject>();
+    private Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject>();
+    private Dictionary<string, AudioClip> audios = new Dictionary<string, AudioClip>();
     private void Awake()
     {
         if(Instance)
@@ -29,22 +38,42 @@ public class AssetManager : MonoBehaviour
 
     private void LoadAssets()
     {
-        foreach(string address in assetAdressList)
+        foreach(string address in prefabAssetAddressList)
         {
-            Addressables.LoadAssetAsync<GameObject>(address).Completed += (handle) => 
-            {
-                if(handle.Status != AsyncOperationStatus.Succeeded)
-                    return;
-                //
-                objectPool.Add(address, handle.Result);
-            };
+            prefabs.Add(address, LoadAsset<GameObject>(address));
+        }
+        foreach(string address in audioAssetAddressList)
+        {
+            audios.Add(address, LoadAsset<AudioClip>(address));
         }
     }
 
-    public GameObject GetObject(string address)
+    private T LoadAsset<T>(string address) where T : Object
     {
-        if(!objectPool.ContainsKey(address))
+        var handle = Addressables.LoadAssetAsync<T>(address);
+        if(handle.Status == AsyncOperationStatus.Failed)
+        {
+            Debug.Log($"Load {address} is failed");
             return null;
-        return objectPool[address];
+        }
+        //
+        handle.WaitForCompletion();
+        return handle.Result;
+    }
+
+    public GameObject GetPrefab(string address)
+    {
+        if(!prefabs.ContainsKey(address))
+            prefabs.Add(address, LoadAsset<GameObject>(address));
+        return prefabs[address];
+    }
+
+    public AudioClip GetAudio(string address)
+    {
+        if(!audios.ContainsKey(address))
+        {
+            audios.Add(address, LoadAsset<AudioClip>(address));
+        }
+        return audios[address];
     }
 }

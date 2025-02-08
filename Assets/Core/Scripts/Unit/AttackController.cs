@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AttackController : MonoBehaviour
@@ -10,12 +11,29 @@ public class AttackController : MonoBehaviour
     [SerializeField] private float meleeAttackRange = 1f;
     [SerializeField] private float rangeAttackRange = 5f;
     [SerializeField] private Transform projectileInstantiateTransform;
+    private readonly static string fireSoundAssetAddress = "SFX/Projectile_Fire.wav";
+    private AudioClip fireSound;
+    private readonly static string meleeAttackSoundAssetAddress = "SFX/Melee_Hit.wav";
+    private AudioClip meleeAttackSound;
+
+    private readonly static string projectileAssetAddress = "VFX/Projectile_01.prefab";
+    private GameObject projectilePrefab;
     private Projectile projectile;
 
     private void Awake()
     {
         unitMovement = GetComponent<UnitMovement>();
         Debug.Assert(unitMovement);
+    }
+
+    private void Start()
+    {
+        fireSound = AssetManager.Instance.GetAudio(fireSoundAssetAddress);
+        Debug.Assert(fireSound);
+        meleeAttackSound = AssetManager.Instance.GetAudio(meleeAttackSoundAssetAddress);
+        Debug.Assert(meleeAttackSound);
+        projectilePrefab = AssetManager.Instance.GetPrefab(projectileAssetAddress);
+        Debug.Assert(projectilePrefab);
     }
 
     private void OnTriggerStay(Collider other)
@@ -75,6 +93,7 @@ public class AttackController : MonoBehaviour
             if(TargetToAttack.TryGetComponent(out Unit target))
             {
                 target.GetDamaged(attackDamage);
+                SoundManager.Instance.Play(meleeAttackSound, SoundManager.sfxVolume);
             }
         }
     }
@@ -92,12 +111,12 @@ public class AttackController : MonoBehaviour
         // Instantiate Projectile
         if(!projectile)
         {
-            GameObject projectileObj = AssetManager.Instance.GetObject("VFX/Projectile_01.prefab");
-            projectile = Instantiate(projectileObj, transform).GetComponent<Projectile>();
+            projectile = Instantiate(projectilePrefab, transform).GetComponent<Projectile>();
         }
         if(TargetToAttack.TryGetComponent(out Unit target))
         {
             projectile.Fire(projectileInstantiateTransform, target);
+            SoundManager.Instance.Play(fireSound, SoundManager.sfxVolume);
         }
     }
 

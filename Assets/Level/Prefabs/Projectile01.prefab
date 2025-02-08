@@ -100,6 +100,7 @@ MonoBehaviour:
   explosionVFX: {fileID: 4885846360790846526}
   damage: 1
   speed: 10
+  explosionSound: {fileID: 8300000, guid: 5ff823f546b52574a931e1d9b44290a6, type: 3}
 --- !u!1001 &317604371519161180
 PrefabInstance:
   m_ObjectHideFlags: 0
