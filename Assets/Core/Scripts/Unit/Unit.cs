@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
@@ -48,8 +47,6 @@ public class Unit : MonoBehaviour
     {
         unitMovement = GetComponent<UnitMovement>();
         attackController = GetComponent<AttackController>();
-        SetMoveable(false);
-        SetIndicator(false);
         Health = maxHealth;
     }
     private void Start()
@@ -58,6 +55,8 @@ public class Unit : MonoBehaviour
         {
             UnitManager.Instance.AddUnit(this);
         }
+        SetMoveable(false);
+        SetIndicator(false);
     }
 
     private void OnDestory()
@@ -82,7 +81,8 @@ public class Unit : MonoBehaviour
 
     public void SetTargetToAttack(Transform target)
     {
-        attackController.TargetToAttack = target;
+        if(attackController)
+            attackController.TargetToAttack = target;
     }
 
     public void GetDamaged(float damage)
@@ -92,7 +92,6 @@ public class Unit : MonoBehaviour
 
     private void DestroyUnit()
     {
-        
         Destroy(gameObject);
     }
 

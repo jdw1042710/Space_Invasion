@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,27 +9,44 @@ public class UnitMovement : MonoBehaviour
     private Camera camera;
     private NavMeshAgent agent;
     private AttackController attackController;
+    private PathIndicator pathIndicator;
     private LayerMask ground = 1 << 3;
 
-    public bool Moveable = false;
+    public bool Moveable
+    {
+        get
+        {
+            return moveable;
+        }
+        set
+        {
+            moveable = value;
+            pathIndicator.ShouldRender = value;
+        }
+    }
+    private bool moveable = false;
     public bool IsCommandedToMove {get; private set;} = false;
     private Vector3 commandedPosition;
 
+    private List<Action> destReachingEventListeners = new List<Action>();
 
     private void Awake()
     {
         unit = GetComponent<Unit>();
+        Debug.Assert(unit);
         camera = Camera.main;
         agent = GetComponent<NavMeshAgent>();
+        Debug.Assert(agent);
         attackController = GetComponent<AttackController>();
+        Debug.Assert(attackController);
+        pathIndicator = GetComponent<PathIndicator>();
+        Debug.Assert(pathIndicator);
     }
 
-    private void Update()
+    private void Start()
     {
-        if(!Moveable) return;
         InputManager inputManager = InputManager.Instance;
         Debug.Assert(inputManager);
-        //check agent reached to dest
     }
 
     private void FixedUpdate()
@@ -35,15 +54,16 @@ public class UnitMovement : MonoBehaviour
         if(IsCommandedToMove)
         {
             bool hasPath = agent.hasPath;
-            float remainingDistance = (transform.position - commandedPosition).magnitude;
-            bool remainPath = remainingDistance > agent.stoppingDistance;
+            bool remainPath = IsRemainPath();
             IsCommandedToMove = hasPath && remainPath;
         }
+        CheckDestinationReached();
     }
 
     public void MoveTo(Vector3 position, bool isForce = false)
     {
         agent.SetDestination(position);
+        pathIndicator.DrawLine(position);
         if(isForce)
         {
             IsCommandedToMove = true;
@@ -62,4 +82,32 @@ public class UnitMovement : MonoBehaviour
     {
         return agent.velocity;
     }
+
+    private bool IsRemainPath()
+    {
+        float remainingDistance = (transform.position - commandedPosition).magnitude;
+        return remainingDistance > agent.stoppingDistance;
+    }
+
+    private void CheckDestinationReached()
+    {
+        if(!agent.hasPath) return;
+        if(!IsRemainPath())
+        {
+            foreach(var listener in destReachingEventListeners)
+                listener();
+            StopToMove();
+        }
+    }
+
+    public void AddReachingDestEventListener(Action listener)
+    {
+        destReachingEventListeners.Add(listener);
+    }
+
+    public void RemoveReachingDestEventListener(Action listener)
+    {
+        destReachingEventListeners.Remove(listener);
+    }
+
 }
