@@ -76,6 +76,8 @@ public class UnitMovement : MonoBehaviour
     public void StopToMove()
     {
         agent.ResetPath();
+        foreach(var listener in destReachingEventListeners)
+            listener();
     }
 
     public Vector3 GetVelocity()
@@ -94,8 +96,6 @@ public class UnitMovement : MonoBehaviour
         if(!agent.hasPath) return;
         if(!IsRemainPath())
         {
-            foreach(var listener in destReachingEventListeners)
-                listener();
             StopToMove();
         }
     }

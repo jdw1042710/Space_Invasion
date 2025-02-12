@@ -92,6 +92,10 @@ public class Unit : MonoBehaviour
 
     private void DestroyUnit()
     {
+        if(UnitManager.Instance)
+        {
+            UnitManager.Instance.RemoveUnit(this);
+        }
         Destroy(gameObject);
     }
 

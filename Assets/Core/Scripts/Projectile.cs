@@ -38,9 +38,9 @@ public class Projectile : MonoBehaviour
 
     private IEnumerator FlyToTarget()
     {
-        projectileVFX.SetActive(true);
         explosionVFX.SetActive(false);
-        while(true)
+        projectileVFX.SetActive(true);
+        while(target)
         {
             Vector3 diff = target.transform.position - transform.position;
             if(diff.magnitude < threshold) break;
@@ -48,21 +48,24 @@ public class Projectile : MonoBehaviour
             // fly
             yield return null;
         }
+        projectileVFX.SetActive(false);
+        flyCoroutine = null;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if(!target) return;
         if(other.transform != target.transform) return;
-        Explosion();
+            Explosion();
     }
 
     private void Explosion()
     {
-        StopCoroutine(flyCoroutine);
         flyCoroutine = null;
-        explosionVFX.SetActive(true);
         projectileVFX.SetActive(false);
+        explosionVFX.SetActive(true);
         target.GetDamaged(damage);
         SoundManager.Instance.Play(explosionSound, SoundManager.sfxVolume);
+        target = null;
     }
 }
